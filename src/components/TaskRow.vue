@@ -1,31 +1,50 @@
 <template>
   <div class="table-container" v-if="hasData(tableData)" :style="rowStyle">
     <div class="table-row">
-      <div class="table-cell first-table-cell" @dragstart="onDragStart(tableId)" @dragover.prevent
+      <div class="table-cell first-table-cell" 
+        @dragstart="onDragStart(tableId)" 
+        @dragover.prevent
         @drop="onDrop(tableId, true)" draggable="true">
         <span class="icon">☰</span>
       </div>
-      <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">{{ tableData.Task }}</div>
-      <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">{{ tableData['Man-hours'] }} <p v-if="hasChildren(tableData)">[{{hours}}]</p></div>
-      <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">{{ tableData.UnitPrice }}</div>
-      <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">{{ tableData.Discount }} <p v-if="hasChildren(tableData)">[{{discount}}]</p></div>
-      <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">{{ tableData.Amount }} <p v-if="hasChildren(tableData)">[{{amount}}]</p></div>
+      <div class="table-cell" 
+        @dragover.prevent 
+        @drop="onDrop(tableId)">{{ tableData.Task }}</div>
+      <div class="table-cell" 
+        @dragover.prevent 
+        @drop="onDrop(tableId)">{{ tableData['Man-hours'] }} <p
+          v-if="hasChildren(tableData)">[{{ hours }}]</p>
+      </div>
+      <div class="table-cell" 
+        @dragover.prevent 
+        @drop="onDrop(tableId)">{{ tableData.UnitPrice }}</div>
+      <div class="table-cell" 
+        @dragover.prevent 
+        @drop="onDrop(tableId)">{{ tableData.Discount }} <p
+          v-if="hasChildren(tableData)">[{{ discount }}]</p>
+      </div>
+      <div class="table-cell" 
+        @dragover.prevent 
+        @drop="onDrop(tableId)">{{ tableData.Amount }} <p
+          v-if="hasChildren(tableData)">[{{ amount }}]</p>
+      </div>
     </div>
-    <TaskRow 
-      v-if="hasChildren(tableData)" 
-      v-for="(row, index) in extractExtraKeys(tableData)" 
-      :key="index"
-      :table-id="index" 
-      :table-data="row" 
-      :root="root"
-      @refresh-table-data="refreshTableData" />
+    <template v-if="hasChildren(tableData)">
+      <TaskRow 
+        v-for="(row, index) in extractExtraKeys(tableData)" 
+        :key="index" 
+        :table-id="index" 
+        :table-data="row"
+        :root="root" 
+        @refresh-table-data="refreshTableData" />
+    </template>
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits, watch, computed } from 'vue';
 import TaskRow from './TaskRow.vue';
-import { useDragStore } from '../stores/dragStore.js';
+import { dragStore } from '../utils.js';
 
 
 const props = defineProps({
@@ -45,13 +64,11 @@ const props = defineProps({
 
 const emits = defineEmits(['update-table-data', 'refresh-table-data'])
 
-const dragStore = useDragStore();
 const rootData = ref({})
 
-
-const hours = computed(()=> calculateTotal(props.tableData, 'Man-hours'))
-const amount = computed(()=> calculateTotal(props.tableData, 'Amount'))
-const discount = computed(()=> calculateTotal(props.tableData, 'Discount'))
+const hours = computed(() => calculateTotal(props.tableData, 'Man-hours'))
+const amount = computed(() => calculateTotal(props.tableData, 'Amount'))
+const discount = computed(() => calculateTotal(props.tableData, 'Discount'))
 
 
 const oldKey = ref(null);

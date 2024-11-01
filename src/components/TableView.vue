@@ -10,13 +10,13 @@
     </div>
     <!-- Render children if they exist -->
     <div class="children-container">
-      <TaskRow v-for="(row, index) in tableData" 
+      <TaskRow 
+        v-for="(row, index) in tableData" 
         :key="index" 
         :table-id="index" 
         :root="tableData" 
         :table-data="row"
-        @refresh-table-data="refreshTableData"
-        />
+        @refresh-table-data="refreshTableData" />
     </div>
   </div>
 </template>
@@ -24,9 +24,8 @@
 <script setup>
 import { ref } from 'vue';
 import TaskRow from "./TaskRow.vue";
-import { useDragStore } from '../stores/dragStore.js';
+import { dragStore } from '../utils.js';
 
-const dragStore = useDragStore();
 const tableData = ref({
   '1': {
     Task: 'Task 1',

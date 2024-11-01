@@ -1,38 +1,39 @@
 class DragStore {
-    static draggedIndex = null;
-    static toDraggedIndex = null;
-    static draggedObj = null;
+    constructor() {
+        this.draggedIndex = null;
+        this.toDraggedIndex = null;
+        this.draggedObj = null;
+    }
 
-    getDraggedIndex() {
-        return DragStore.draggedIndex;
+    get getDraggedIndex() {
+        return this.draggedIndex;
+    }
+
+    get getToDraggedIndex() {
+        return this.toDraggedIndex;
+    }
+
+    get getDraggedObj() {
+        return this.draggedObj;
     }
 
     setDraggedIndex(index) {
-        DragStore.draggedIndex = index;
-    }
-
-    getToDraggedIndex() {
-        return DragStore.toDraggedIndex;
+        this.draggedIndex = index;
     }
 
     setToDraggedIndex(index) {
-        DragStore.toDraggedIndex = index;
-    }
-
-    getDraggedObj() {
-        return DragStore.draggedObj;
+        this.toDraggedIndex = index;
     }
 
     setDraggedObj(obj) {
-        DragStore.draggedObj = obj;
+        this.draggedObj = obj;
     }
 
     clearStore() {
-        DragStore.toDraggedIndex = null;
-        DragStore.draggedObj = null;
-        DragStore.draggedIndex = null;
+        this.draggedIndex = null;
+        this.toDraggedIndex = null;
+        this.draggedObj = null;
     }
 }
 
-
-export default DragStore;
+export const dragStore = new DragStore();
