@@ -85,9 +85,10 @@
 
 
 <script setup>
-import { ref, defineProps, defineEmits, watch, computed } from "vue";
+import { ref, defineProps, defineEmits, computed } from "vue";
 import TaskRow from "./TaskRow.vue";
 import { dragStore } from "../utils.js";
+import { calcStore } from "../calculator/calc";
 
 const props = defineProps({
   tableId: {
@@ -108,12 +109,10 @@ const emits = defineEmits(["update-table-data", "refresh-table-data"]);
 
 const rootData = ref({});
 const toggleArrow = ref(true);
-
-const hours = computed(() => calculateTotal(props.tableData, "Man-hours"));
-const amount = computed(() => calculateTotal(props.tableData, "Amount"));
-const discount = computed(() => calculateTotal(props.tableData, "Discount"));
-
 const oldKey = ref(null);
+const hours = computed(() => calcStore.getHours(props.tableId));
+const amount = computed(() => calcStore.getAmount(props.tableId));
+const discount = computed(() => calcStore.getDiscount(props.tableId));
 
 function hasData(obj) {
   return Object.keys(obj).length > 0;
@@ -148,19 +147,6 @@ const rowStyle = (value = null) => {
 
 const refreshTableData = (data) => {
   emits("refresh-table-data", data);
-};
-
-const calculateTotal = (data, property) => {
-  let total = 0;
-  if (property && data[property]) {
-    total += data[property];
-  }
-  for (const key in data) {
-    if (typeof data[key] === "object" && data[key] !== null) {
-      total += calculateTotal(data[key], property);
-    }
-  }
-  return total;
 };
 
 const onDragStart = (index) => {
