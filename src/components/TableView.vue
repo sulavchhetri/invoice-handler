@@ -21,9 +21,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import TaskRow from "./TaskRow.vue";
 import { dragStore } from "../utils.js";
+import { calcStore } from "../calculator/calc";
 
 const tableData = ref({
   1: {
@@ -102,6 +103,24 @@ const refreshTableData = (data) => {
   dragStore.clearStore();
   tableData.value = data;
 };
+
+const setCalcData = () => {
+  calcStore.setTotal(tableData.value, "Amount");
+  calcStore.setTotal(tableData.value, "Man-hours");
+  calcStore.setTotal(tableData.value, "Discount");
+};
+
+onMounted(()=>{
+  setCalcData();
+})
+
+watch(
+  tableData,
+  () => {
+    setCalcData();
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
