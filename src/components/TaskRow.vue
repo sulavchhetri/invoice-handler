@@ -345,7 +345,6 @@ const singleTonConvertor = (obj, targetPrefix) => {
 .table-cell {
   flex: 1;
   padding: 10px;
-  text-align: center;
   display: flex;
   justify-content: flex-start;
   align-items: center;

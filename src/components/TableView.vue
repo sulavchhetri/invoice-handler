@@ -127,7 +127,6 @@ const refreshTableData = (data) => {
 .table-header-item {
   flex: 1;
   padding: 10px;
-  text-align: center;
   font-weight: bold;
   transition: background-color 0.3s ease;
   border-radius: 6px;
