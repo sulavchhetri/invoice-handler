@@ -16,7 +16,7 @@
             @dragover.prevent
             @drop="onDrop(tableId)"
           >
-            Parent
+            Parent {{ tableId }}
           </div>
         </div>
         <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
