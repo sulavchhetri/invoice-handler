@@ -2,4 +2,5 @@
 
 Run npm install and then npm run dev
 
-![image](https://github.com/user-attachments/assets/fd092d7d-3442-43b4-a605-5662484bc563)
+![image](https://github.com/user-attachments/assets/267cde6d-5130-441a-b5ce-41a8eba58c3b)
+
