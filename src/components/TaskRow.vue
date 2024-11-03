@@ -31,6 +31,7 @@
         <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
           {{ amount }}
         </div>
+        <div class="table-cell">--</div>
       </div>
     </div>
 
@@ -52,21 +53,25 @@
             @dragover.prevent
             @drop="onDrop(tableId)"
           >
-            {{ tableData.Task }}
+            {{ tableData.task }}
           </div>
         </div>
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData["Man-hours"] }}
+        {{ tableData.hours }}
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData.UnitPrice }}
+        {{ tableData.unit_price }}
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData.Discount }}
+        {{ tableData.discount }}
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData.Amount }}
+        {{ tableData.amount }}
+      </div>
+      <div class="table-cell buttons">
+        <button class="update" @click="showInvoiceModal = true">update</button>
+        <button class="delete" @click="confirmDelete(tableId)">delete</button>
       </div>
     </div>
 
@@ -81,14 +86,22 @@
       />
     </template>
   </div>
+  <InvoiceModal
+    v-if="showInvoiceModal"
+    :update-mode="true"
+    :task-key="tableId"
+    :task-data="tableData"
+    @close-invoice-modal="handleInvoiceModal"
+  />
 </template>
-
 
 <script setup>
 import { ref, defineProps, defineEmits, computed } from "vue";
 import TaskRow from "./TaskRow.vue";
+import InvoiceModal from "./InvoiceModal.vue";
 import { dragStore } from "../utils.js";
-import { calcStore } from "../calculator/calc";
+import { calcStore } from "../calculator/calc.js";
+import { deleteInvoice, updateInvoice } from "../services/apiService.js";
 
 const props = defineProps({
   tableId: {
@@ -107,6 +120,8 @@ const props = defineProps({
 
 const emits = defineEmits(["update-table-data", "refresh-table-data"]);
 
+const showInvoiceModal = ref(false);
+
 const rootData = ref({});
 const toggleArrow = ref(true);
 const oldKey = ref(null);
@@ -114,17 +129,40 @@ const hours = computed(() => calcStore.getHours(props.tableId));
 const amount = computed(() => calcStore.getAmount(props.tableId));
 const discount = computed(() => calcStore.getDiscount(props.tableId));
 
+const handleInvoiceModal = async (data) => {
+  showInvoiceModal.value = false;
+  const task_id = data?.task_id;
+  if (task_id) {
+    await updateInvoice(task_id, data);
+    calcStore.setRefreshStore(true);
+  }
+};
+
 function hasData(obj) {
   return Object.keys(obj).length > 0;
 }
 
 const hasChildren = (obj) => {
-  const standardKeys = ["Task", "Man-hours", "UnitPrice", "Discount", "Amount"];
+  const standardKeys = [
+    "task",
+    "hours",
+    "unit_price",
+    "discount",
+    "amount",
+    "task_id",
+  ];
   return Object.keys(obj).some((key) => !standardKeys.includes(key));
 };
 
 const extractExtraKeys = (obj) => {
-  const allowedKeys = ["Task", "Man-hours", "UnitPrice", "Discount", "Amount"];
+  const allowedKeys = [
+    "task",
+    "hours",
+    "unit_price",
+    "discount",
+    "amount",
+    "task_id",
+  ];
   const extraKeys = {};
 
   for (const key in obj) {
@@ -134,6 +172,14 @@ const extractExtraKeys = (obj) => {
   }
 
   return extraKeys;
+};
+
+const confirmDelete = async (id) => {
+  const confirmed = window.confirm("Do you want to delete this invoice?");
+  if (confirmed) {
+    await deleteInvoice(id);
+    calcStore.setRefreshStore(true);
+  }
 };
 
 const dotCount = props.tableId.split(".").length - 1;
@@ -349,5 +395,39 @@ const singleTonConvertor = (obj, targetPrefix) => {
   padding: 5px;
   background-color: #36454f;
   border-radius: 6px;
+}
+
+.buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.table-cell button {
+  background-color: #4b586e;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-size: 14px;
+}
+
+.table-cell button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.table-cell button:active {
+  background-color: #004085;
+  transform: translateY(0);
+}
+
+.table-cell button.delete {
+  background-color: #dc3545;
+}
+
+.table-cell button.delete:hover {
+  background-color: #c82333;
 }
 </style>
