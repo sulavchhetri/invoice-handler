@@ -92,7 +92,7 @@
 import { ref, defineProps, defineEmits, computed } from "vue";
 import TaskRow from "./TaskRow.vue";
 import { dragStore } from "../utils.js";
-import { calcStore } from "../calculator/calc";
+import { calcStore } from "../calculator/calc.js";
 
 const props = defineProps({
   tableId: {
