@@ -31,6 +31,7 @@
         <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
           {{ amount }}
         </div>
+        <div class="table-cell">--</div>
       </div>
     </div>
 
@@ -68,6 +69,10 @@
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
         {{ tableData.Amount }}
       </div>
+      <div class="table-cell buttons">
+        <button class="update">update</button>
+        <button class="delete">delete</button>
+      </div>
     </div>
 
     <template v-if="hasChildren(tableData) && toggleArrow">
@@ -82,7 +87,6 @@
     </template>
   </div>
 </template>
-
 
 <script setup>
 import { ref, defineProps, defineEmits, computed } from "vue";
@@ -349,5 +353,39 @@ const singleTonConvertor = (obj, targetPrefix) => {
   padding: 5px;
   background-color: #36454f;
   border-radius: 6px;
+}
+
+.buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.table-cell button {
+  background-color: #4b586e;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-size: 14px;
+}
+
+.table-cell button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.table-cell button:active {
+  background-color: #004085;
+  transform: translateY(0);
+}
+
+.table-cell button.delete {
+  background-color: #dc3545;
+}
+
+.table-cell button.delete:hover {
+  background-color: #c82333;
 }
 </style>

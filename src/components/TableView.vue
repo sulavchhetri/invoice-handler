@@ -6,6 +6,7 @@
       <div class="table-header-item">Unit Price</div>
       <div class="table-header-item">Discount</div>
       <div class="table-header-item">Amount</div>
+      <div class="table-header-item">Action</div>
     </div>
     <div class="children-container">
       <TaskRow
@@ -110,9 +111,9 @@ const setCalcData = () => {
   calcStore.setTotal(tableData.value, "Discount");
 };
 
-onMounted(()=>{
+onMounted(() => {
   setCalcData();
-})
+});
 
 watch(
   tableData,
