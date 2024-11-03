@@ -113,7 +113,6 @@ const tableData = ref({
   },
 });
 
-
 const showInvoiceModal = ref(false);
 
 const openModal = () => {
@@ -126,9 +125,9 @@ const refreshTableData = (data) => {
 };
 
 const setCalcData = () => {
-  calcStore.setTotal(tableData.value, "Amount");
-  calcStore.setTotal(tableData.value, "Man-hours");
-  calcStore.setTotal(tableData.value, "Discount");
+  calcStore.setTotal(tableData.value, "amount");
+  calcStore.setTotal(tableData.value, "hours");
+  calcStore.setTotal(tableData.value, "discount");
 };
 
 onMounted(() => {
@@ -143,17 +142,16 @@ watch(
   { deep: true }
 );
 
-const handleInvoiceModal = (data)=> {
+const handleInvoiceModal = (data) => {
   showInvoiceModal.value = false;
-  console.log(data, "came here")
-}
+  console.log(data, "came here");
+};
 
 const getNextRootKey = () => {
   const keys = Object.keys(tableData.value).map(Number);
   const maxKey = Math.max(...keys);
   return (maxKey + 1).toString();
-}
-
+};
 </script>
 
 <style scoped>

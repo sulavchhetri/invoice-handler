@@ -53,21 +53,21 @@
             @dragover.prevent
             @drop="onDrop(tableId)"
           >
-            {{ tableData.Task }}
+            {{ tableData.task }}
           </div>
         </div>
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData["Man-hours"] }}
+        {{ tableData.hours }}
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData.UnitPrice }}
+        {{ tableData.unit_price }}
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData.Discount }}
+        {{ tableData.discount }}
       </div>
       <div class="table-cell" @dragover.prevent @drop="onDrop(tableId)">
-        {{ tableData.Amount }}
+        {{ tableData.amount }}
       </div>
       <div class="table-cell buttons">
         <button class="update">update</button>
@@ -123,12 +123,12 @@ function hasData(obj) {
 }
 
 const hasChildren = (obj) => {
-  const standardKeys = ["Task", "Man-hours", "UnitPrice", "Discount", "Amount"];
+  const standardKeys = ["task", "hours", "unit_price", "discount", "amount"];
   return Object.keys(obj).some((key) => !standardKeys.includes(key));
 };
 
 const extractExtraKeys = (obj) => {
-  const allowedKeys = ["Task", "Man-hours", "UnitPrice", "Discount", "Amount"];
+  const allowedKeys = ["task", "hours", "unit_price", "discount", "amount"];
   const extraKeys = {};
 
   for (const key in obj) {
