@@ -70,7 +70,7 @@
         {{ tableData.amount }}
       </div>
       <div class="table-cell buttons">
-        <button class="update">update</button>
+        <button class="update" @click="showInvoiceModal = true">update</button>
         <button class="delete">delete</button>
       </div>
     </div>
@@ -86,11 +86,18 @@
       />
     </template>
   </div>
+    <InvoiceModal
+      v-if="showInvoiceModal"
+      :update-mode="true"
+      :task-key="tableId"
+      @close-invoice-modal="handleInvoiceModal"
+    />
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits, computed } from "vue";
 import TaskRow from "./TaskRow.vue";
+import InvoiceModal from "./InvoiceModal.vue";
 import { dragStore } from "../utils.js";
 import { calcStore } from "../calculator/calc.js";
 
@@ -111,12 +118,19 @@ const props = defineProps({
 
 const emits = defineEmits(["update-table-data", "refresh-table-data"]);
 
+const showInvoiceModal = ref(false);
+
 const rootData = ref({});
 const toggleArrow = ref(true);
 const oldKey = ref(null);
 const hours = computed(() => calcStore.getHours(props.tableId));
 const amount = computed(() => calcStore.getAmount(props.tableId));
 const discount = computed(() => calcStore.getDiscount(props.tableId));
+
+
+const handleInvoiceModal = (data)=> {
+  showInvoiceModal.value = false;
+}
 
 function hasData(obj) {
   return Object.keys(obj).length > 0;
