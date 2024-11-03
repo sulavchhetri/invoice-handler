@@ -71,7 +71,7 @@
       </div>
       <div class="table-cell buttons">
         <button class="update" @click="showInvoiceModal = true">update</button>
-        <button class="delete">delete</button>
+        <button class="delete" @click="confirmDelete(tableId)">delete</button>
       </div>
     </div>
 
@@ -153,6 +153,14 @@ const extractExtraKeys = (obj) => {
 
   return extraKeys;
 };
+
+const confirmDelete = (id) => {
+  const confirmed = window.confirm('Do you want to delete this invoice?');
+  if (confirmed) {
+    // deleteInvoice(id);
+  }
+};
+
 
 const dotCount = props.tableId.split(".").length - 1;
 
