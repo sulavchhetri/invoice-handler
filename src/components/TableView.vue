@@ -2,7 +2,10 @@
   <div class="invoice-handler">
     <div class="invoice-header">
       <h1>Invoice Handler</h1>
-      <button class="create-invoice-btn" @click="openModal">New +</button>
+      <div class="buttons">
+        <button class="create-invoice-btn" @click="openModal">New</button>
+        <button class="create-invoice-btn" @click="handleSaveInvoices">Save All</button>
+      </div>
     </div>
     <div class="table-top">
       <div class="table-header">
@@ -34,85 +37,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import {onMounted, ref, watch} from "vue";
 import TaskRow from "./TaskRow.vue";
 import InvoiceModal from "./InvoiceModal.vue";
-import { dragStore } from "../utils.js";
-import { calcStore } from "../calculator/calc";
-
-const tableData = ref({
-  1: {
-    task: "Task 1",
-    hours: 40,
-    unit_price: 150,
-    discount: 20,
-    amount: 3000,
-    1.1: {
-      task: "Task 1.1",
-      hours: 60,
-      unit_price: 20,
-      discount: 10,
-      amount: 2000,
-    },
-    1.2: {
-      task: "Task 1.2",
-      hours: 120,
-      unit_price: 30,
-      discount: 50,
-      amount: 1000,
-    },
-  },
-  2: {
-    task: "Task 2",
-    hours: 30,
-    unit_price: 300,
-    discount: 25,
-    amount: 500,
-  },
-  3: {
-    task: "Task 3",
-    hours: 100,
-    unit_price: 25,
-    discount: 15,
-    amount: 100,
-  },
-  4: {
-    task: "Task 4",
-    hours: 8,
-    unit_price: 600,
-    discount: 1000,
-    amount: 1500,
-  },
-  5: {
-    task: "Task 5",
-    hours: 100,
-    unit_price: 500,
-    discount: 2500,
-    amount: 2000,
-  },
-  6: {
-    task: "Task 6",
-    hours: 60,
-    unit_price: 150,
-    discount: 300,
-    amount: 3000,
-    6.1: {
-      task: "Task 6.1",
-      hours: 70,
-      unit_price: 150,
-      discount: 300,
-      amount: 2000,
-      "6.1.1": {
-        task: "Task 6.1.1",
-        hours: 50,
-        unit_price: 150,
-        discount: 200,
-        amount: 1000,
-      },
-    },
-  },
-});
-
+import {dragStore} from "../utils.js";
+import {calcStore} from "../calculator/calc";
+import {createInvoices, getInvoices, createInvoice} from "../services/apiService.js";
+const tableData = ref({});
 const showInvoiceModal = ref(false);
 
 const openModal = () => {
@@ -130,8 +61,13 @@ const setCalcData = () => {
   calcStore.setTotal(tableData.value, "discount");
 };
 
-onMounted(() => {
-  setCalcData();
+const handleSaveInvoices = async () => {
+  await createInvoices(tableData.value);
+  tableData.value = await getInvoices()
+}
+
+onMounted(async () => {
+  tableData.value = await getInvoices();
 });
 
 watch(
@@ -142,9 +78,13 @@ watch(
   { deep: true }
 );
 
-const handleInvoiceModal = (data) => {
+const handleInvoiceModal = async (data) => {
   showInvoiceModal.value = false;
-  console.log(data, "came here");
+  const task_id = data?.task_id;
+  if (task_id) {
+    await createInvoice(task_id, data);
+    tableData.value = await getInvoices();
+  }
 };
 
 const getNextRootKey = () => {
@@ -164,7 +104,7 @@ const getNextRootKey = () => {
   justify-content: space-between;
   align-items: center;
   padding: 10px 40px;
-  background-color: #4b586e; /* Slightly lighter than #36454f */
+  background-color: #4b586e;
   color: white;
   border-radius: 6px;
 }
@@ -172,6 +112,11 @@ const getNextRootKey = () => {
 .invoice-header h1 {
   margin: 0;
   font-size: 24px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
 }
 
 .create-invoice-btn {

@@ -137,12 +137,12 @@ function hasData(obj) {
 }
 
 const hasChildren = (obj) => {
-  const standardKeys = ["task", "hours", "unit_price", "discount", "amount"];
+  const standardKeys = ["task", "hours", "unit_price", "discount", "amount", "task_id"];
   return Object.keys(obj).some((key) => !standardKeys.includes(key));
 };
 
 const extractExtraKeys = (obj) => {
-  const allowedKeys = ["task", "hours", "unit_price", "discount", "amount"];
+  const allowedKeys = ["task", "hours", "unit_price", "discount", "amount", "task_id"];
   const extraKeys = {};
 
   for (const key in obj) {

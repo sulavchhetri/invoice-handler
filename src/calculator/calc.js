@@ -14,7 +14,7 @@ class CalcStore {
       discount: this.state.discounts,
     };
 
-    this.keys = ["amount", "hours", "unit_price", "discount", "task"];
+    this.keys = ["amount", "hours", "unit_price", "discount", "task", "task_id"];
   }
 
   setAmounts(data) {

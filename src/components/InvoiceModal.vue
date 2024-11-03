@@ -5,7 +5,7 @@
       <form @submit.prevent="submitForm" class="form-container">
         <div class="form-input">
           <label for="task">Task ID :</label>
-          <input type="text" v-model="formData.taskID" required />
+          <input type="text" v-model="formData.task_id" required />
         </div>
         <div class="form-input">
           <label for="task">Task :</label>
@@ -14,11 +14,11 @@
         <div class="form-input">
           <div class="form-input"></div>
           <label for="manHours">Man-hours :</label>
-          <input type="number" v-model="formData.manHours" required />
+          <input type="number" v-model="formData.hours" required />
         </div>
         <div class="form-input">
           <label for="unitPrice">Unit Price :</label>
-          <input type="number" v-model="formData.unitPrice" required />
+          <input type="number" v-model="formData.unit_price" required />
         </div>
         <div class="form-input">
           <label for="discount">Discount :</label>
@@ -55,10 +55,10 @@ const props = defineProps({
 const emits = defineEmits(["close-invoice-modal"]);
 
 const formData = reactive({
-  taskID: props.taskKey,
+  task_id: props.taskKey,
   task: "",
-  manHours: "",
-  unitPrice: "",
+  hours: "",
+  unit_price: "",
   discount: "",
   amount: "",
 });
@@ -75,12 +75,12 @@ const close = () => {
 };
 
 const resetForm = () => {
-  formData.taskID = "";
+  formData.task_id = "";
   formData.amount = "";
-  formData.manHours = "";
+  formData.hours = "";
   formData.discount = "";
   formData.task = "";
-  formData.unitPrice = "";
+  formData.unit_price = "";
 };
 
 const submitForm = () => {
