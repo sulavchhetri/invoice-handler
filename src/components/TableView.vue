@@ -4,7 +4,9 @@
       <h1>Invoice Handler</h1>
       <div class="buttons">
         <button class="create-invoice-btn" @click="openModal">New</button>
-        <button class="create-invoice-btn" @click="handleSaveInvoices">Save All</button>
+        <button class="create-invoice-btn" @click="handleSaveInvoices">
+          Save All
+        </button>
       </div>
     </div>
     <div class="table-top">
@@ -37,12 +39,16 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import { onMounted, ref, watch } from "vue";
 import TaskRow from "./TaskRow.vue";
 import InvoiceModal from "./InvoiceModal.vue";
-import {dragStore} from "../utils.js";
-import {calcStore} from "../calculator/calc";
-import {createInvoices, getInvoices, createInvoice} from "../services/apiService.js";
+import { dragStore } from "../utils.js";
+import { calcStore } from "../calculator/calc";
+import {
+  createInvoices,
+  getInvoices,
+  createInvoice,
+} from "../services/apiService.js";
 const tableData = ref({});
 const showInvoiceModal = ref(false);
 
@@ -63,8 +69,8 @@ const setCalcData = () => {
 
 const handleSaveInvoices = async () => {
   await createInvoices(tableData.value);
-  tableData.value = await getInvoices()
-}
+  tableData.value = await getInvoices();
+};
 
 onMounted(async () => {
   tableData.value = await getInvoices();
@@ -76,6 +82,16 @@ watch(
     setCalcData();
   },
   { deep: true }
+);
+
+watch(
+  () => calcStore.getRefreshStore,
+  async (newValue) => {
+    if (newValue) {
+      tableData.value = await getInvoices();
+      calcStore.setRefreshStore(false);
+    }
+  }
 );
 
 const handleInvoiceModal = async (data) => {

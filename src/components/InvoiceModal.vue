@@ -50,17 +50,22 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  taskData : {
+    type: Object,
+    required: false,
+    default : ()=> {}
+  }
 });
 
 const emits = defineEmits(["close-invoice-modal"]);
 
 const formData = reactive({
   task_id: props.taskKey,
-  task: "",
-  hours: "",
-  unit_price: "",
-  discount: "",
-  amount: "",
+  task: props.taskData?.task || "",
+  hours: props.taskData?.hours || "",
+  unit_price: props.taskData?.unit_price || "",
+  discount: props.taskData?.discount || "",
+  amount: props.taskData?.amount || "",
 });
 
 const modalHeader = computed(() =>

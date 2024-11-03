@@ -86,12 +86,13 @@
       />
     </template>
   </div>
-    <InvoiceModal
-      v-if="showInvoiceModal"
-      :update-mode="true"
-      :task-key="tableId"
-      @close-invoice-modal="handleInvoiceModal"
-    />
+  <InvoiceModal
+    v-if="showInvoiceModal"
+    :update-mode="true"
+    :task-key="tableId"
+    :task-data="tableData"
+    @close-invoice-modal="handleInvoiceModal"
+  />
 </template>
 
 <script setup>
@@ -100,6 +101,7 @@ import TaskRow from "./TaskRow.vue";
 import InvoiceModal from "./InvoiceModal.vue";
 import { dragStore } from "../utils.js";
 import { calcStore } from "../calculator/calc.js";
+import { deleteInvoice, updateInvoice } from "../services/apiService.js";
 
 const props = defineProps({
   tableId: {
@@ -127,22 +129,40 @@ const hours = computed(() => calcStore.getHours(props.tableId));
 const amount = computed(() => calcStore.getAmount(props.tableId));
 const discount = computed(() => calcStore.getDiscount(props.tableId));
 
-
-const handleInvoiceModal = (data)=> {
+const handleInvoiceModal = async (data) => {
   showInvoiceModal.value = false;
-}
+  const task_id = data?.task_id;
+  if (task_id) {
+    await updateInvoice(task_id, data);
+    calcStore.setRefreshStore(true);
+  }
+};
 
 function hasData(obj) {
   return Object.keys(obj).length > 0;
 }
 
 const hasChildren = (obj) => {
-  const standardKeys = ["task", "hours", "unit_price", "discount", "amount", "task_id"];
+  const standardKeys = [
+    "task",
+    "hours",
+    "unit_price",
+    "discount",
+    "amount",
+    "task_id",
+  ];
   return Object.keys(obj).some((key) => !standardKeys.includes(key));
 };
 
 const extractExtraKeys = (obj) => {
-  const allowedKeys = ["task", "hours", "unit_price", "discount", "amount", "task_id"];
+  const allowedKeys = [
+    "task",
+    "hours",
+    "unit_price",
+    "discount",
+    "amount",
+    "task_id",
+  ];
   const extraKeys = {};
 
   for (const key in obj) {
@@ -154,13 +174,13 @@ const extractExtraKeys = (obj) => {
   return extraKeys;
 };
 
-const confirmDelete = (id) => {
-  const confirmed = window.confirm('Do you want to delete this invoice?');
+const confirmDelete = async (id) => {
+  const confirmed = window.confirm("Do you want to delete this invoice?");
   if (confirmed) {
-    // deleteInvoice(id);
+    await deleteInvoice(id);
+    calcStore.setRefreshStore(true);
   }
 };
-
 
 const dotCount = props.tableId.split(".").length - 1;
 

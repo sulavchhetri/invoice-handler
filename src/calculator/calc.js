@@ -6,6 +6,7 @@ class CalcStore {
       amounts: {},
       hours: {},
       discounts: {},
+      refreshStore : false
     });
 
     this.mappers = {
@@ -27,6 +28,13 @@ class CalcStore {
 
   setDiscounts(data) {
     Object.assign(this.state.discounts, data);
+  }
+
+  setRefreshStore (value) {
+    this.state.refreshStore =  value
+  }
+  get getRefreshStore() {
+    return this.state.refreshStore;
   }
 
   getAmount(key) {
@@ -64,6 +72,7 @@ class CalcStore {
     this.state.amounts = {};
     this.state.discounts = {};
     this.state.hours = {};
+    this.refreshStore = false;
   }
 }
 
