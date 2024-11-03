@@ -130,7 +130,6 @@ watch(
   font-size: 14px;
   font-weight: bold;
   color: #696969;
-  width: 1500px;
 }
 
 .table-header {
