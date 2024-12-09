@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  invoice-handler:
+    container_name: invoice-handler
+    build:
+      context: .
+      dockerfile: ./DockerFile
+    restart: unless-stopped
+    volumes:
+      - .:/opt/app
+      - /opt/app/node_modules
+    ports:
+    - "5173:5173"
